@@ -1,0 +1,188 @@
+class Sprites {
+    static Array table;
+    static Array chick;
+
+    function void init() {
+        var Array s;
+        let table = Array.new(8);
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = 0;
+        let s[4] = 0;
+        let s[5] = 0;
+        let s[6] = 0;
+        let s[7] = 0;
+        let s[8] = 0;
+        let s[9] = 0;
+        let s[10] = 0;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 0;
+        let table[0] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = -16;
+        let s[4] = -8;
+        let s[5] = -8;
+        let s[6] = -8;
+        let s[7] = -8;
+        let s[8] = -16;
+        let s[9] = 192;
+        let s[10] = 192;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 771;
+        let table[1] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = -1;
+        let s[4] = -1;
+        let s[5] = -1;
+        let s[6] = -1;
+        let s[7] = -1;
+        let s[8] = -1;
+        let s[9] = 0;
+        let s[10] = 0;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 771;
+        let table[2] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = 4095;
+        let s[4] = 8191;
+        let s[5] = 8191;
+        let s[6] = 8191;
+        let s[7] = 8191;
+        let s[8] = 4095;
+        let s[9] = 768;
+        let s[10] = 768;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 771;
+        let table[3] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = 4080;
+        let s[4] = 8184;
+        let s[5] = 8184;
+        let s[6] = 8184;
+        let s[7] = 8184;
+        let s[8] = 4080;
+        let s[9] = 3120;
+        let s[10] = 3120;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 771;
+        let table[4] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 2016;
+        let s[2] = 4080;
+        let s[3] = 8184;
+        let s[4] = 8184;
+        let s[5] = 8184;
+        let s[6] = 4080;
+        let s[7] = 2016;
+        let s[8] = 384;
+        let s[9] = 384;
+        let s[10] = 384;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 0;
+        let table[5] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = 0;
+        let s[4] = 0;
+        let s[5] = 0;
+        let s[6] = 0;
+        let s[7] = 0;
+        let s[8] = 0;
+        let s[9] = 0;
+        let s[10] = 0;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 0;
+        let table[6] = s;
+
+        let s = Array.new(16);
+        let s[0] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = 0;
+        let s[4] = 0;
+        let s[5] = 0;
+        let s[6] = 0;
+        let s[7] = 0;
+        let s[8] = 0;
+        let s[9] = 0;
+        let s[10] = 0;
+        let s[11] = 0;
+        let s[12] = 0;
+        let s[13] = 0;
+        let s[14] = 0;
+        let s[15] = 771;
+        let table[7] = s;
+
+        let chick = Array.new(16);
+        let chick[0] = 0;
+        let chick[1] = 960;
+        let chick[2] = 2016;
+        let chick[3] = 1952;
+        let chick[4] = 2040;
+        let chick[5] = 2016;
+        let chick[6] = 960;
+        let chick[7] = 8184;
+        let chick[8] = 16380;
+        let chick[9] = 16380;
+        let chick[10] = 16380;
+        let chick[11] = 8184;
+        let chick[12] = 2016;
+        let chick[13] = 576;
+        let chick[14] = 1632;
+        let chick[15] = 0;
+        return;
+    }
+
+    function Array get(int t) {
+        return table[t];
+    }
+
+    function Array player() {
+        return chick;
+    }
+}

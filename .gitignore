@@ -1,0 +1,17 @@
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Archivos temporales
+*.tmp
+*.bak
+*~
+
+# Nota: los .vm de HackCrossy/ SI se suben a proposito
+# (permiten ejecutar el juego sin compilar).

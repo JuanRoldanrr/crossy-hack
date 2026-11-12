@@ -1,0 +1,157 @@
+/**
+ * Gfx: primitivas graficas de bajo nivel sobre la memoria de video Hack.
+ *
+ * Pantalla Hack: 512 x 256 pixeles, mapeada en RAM[16384 .. 24575].
+ * Cada fila de pixeles ocupa 32 palabras de 16 bits.
+ *   Pixel (x, y) -> palabra RAM[16384 + 32*y + x/16], bit (x mod 16).
+ *
+ * El juego trabaja sobre una rejilla de celdas de 16x16 pixeles:
+ *   - 32 columnas (una palabra de ancho cada una)
+ *   - fila 0 de celdas (y = 0..15)  -> marcador (HUD)
+ *   - filas 1..15 de celdas         -> 15 carriles de juego (indices 0..14)
+ *
+ * Como cada celda mide exactamente una palabra de ancho, NUNCA hace falta
+ * dividir x/16 ni desplazar bits: la columna ES la palabra.
+ * Las direcciones de cada fila se precalculan UNA vez con sumas (rowAddr),
+ * asi que el motor no ejecuta ninguna multiplicacion ni division.
+ */
+class Gfx {
+    static Array mem;       // mem[i] equivale a RAM[i] (acceso directo a memoria)
+    static Array rowAddr;   // rowAddr[y] = 16384 + 32*y  (calculado sumando 32)
+    static Array laneBase;  // direccion de la primera fila del carril k
+    static Array laneYTab;  // coordenada y (en pixeles) del borde superior del carril k
+
+    /** Precalcula las tablas de direcciones usando solo sumas. */
+    function void init() {
+        var int y, a, k;
+        let mem = 0;
+        let rowAddr = Array.new(256);
+        let a = 16384;
+        let y = 0;
+        while (y < 256) {
+            let rowAddr[y] = a;
+            let a = a + 32;          // siguiente fila: +32 palabras (en vez de 32*y)
+            let y = y + 1;
+        }
+        let laneBase = Array.new(15);
+        let laneYTab = Array.new(15);
+        let k = 0;
+        let y = 16;                  // el carril 0 empieza debajo del HUD
+        while (k < 15) {
+            let laneYTab[k] = y;
+            let laneBase[k] = rowAddr[y];
+            let y = y + 16;          // cada carril mide 16 pixeles (en vez de 16*k)
+            let k = k + 1;
+        }
+        return;
+    }
+
+    /** Coordenada y (pixeles) del borde superior del carril k. */
+    function int laneY(int k) {
+        return laneYTab[k];
+    }
+
+    /** XOR de 16 bits construido con AND, OR y NOT (la ALU Hack no tiene XOR). */
+    function int xor(int a, int b) {
+        return (a | b) & (~(a & b));
+    }
+
+    /**
+     * Dibuja (sobrescribe) la celda (col, carril) con el sprite del tipo dado.
+     * 16 escrituras directas a memoria de video, avanzando 32 palabras por fila.
+     */
+    function void drawCell(int col, int lane, int type) {
+        var int a;
+        var Array spr;
+        let spr = Sprites.get(type);
+        let a = laneBase[lane] + col;
+        // Bucle desenrollado: elimina el contador y la comparacion por fila.
+        let mem[a] = spr[0];   let a = a + 32;
+        let mem[a] = spr[1];   let a = a + 32;
+        let mem[a] = spr[2];   let a = a + 32;
+        let mem[a] = spr[3];   let a = a + 32;
+        let mem[a] = spr[4];   let a = a + 32;
+        let mem[a] = spr[5];   let a = a + 32;
+        let mem[a] = spr[6];   let a = a + 32;
+        let mem[a] = spr[7];   let a = a + 32;
+        let mem[a] = spr[8];   let a = a + 32;
+        let mem[a] = spr[9];   let a = a + 32;
+        let mem[a] = spr[10];  let a = a + 32;
+        let mem[a] = spr[11];  let a = a + 32;
+        let mem[a] = spr[12];  let a = a + 32;
+        let mem[a] = spr[13];  let a = a + 32;
+        let mem[a] = spr[14];  let a = a + 32;
+        let mem[a] = spr[15];
+        return;
+    }
+
+    /**
+     * Version rapida para celdas de carretera (tipos 1-4 y 7).
+     * Todos los sprites de carretera son identicos en las filas 0-1 y 13-15
+     * (blanco + marca discontinua), asi que solo se reescriben las filas 2..12:
+     * 11 escrituras en vez de 16. 64 = 2 filas * 32 palabras.
+     */
+    function void drawRoadCell(int col, int lane, int type) {
+        var int a;
+        var Array spr;
+        let spr = Sprites.get(type);
+        let a = laneBase[lane] + 64 + col;
+        let mem[a] = spr[2];   let a = a + 32;
+        let mem[a] = spr[3];   let a = a + 32;
+        let mem[a] = spr[4];   let a = a + 32;
+        let mem[a] = spr[5];   let a = a + 32;
+        let mem[a] = spr[6];   let a = a + 32;
+        let mem[a] = spr[7];   let a = a + 32;
+        let mem[a] = spr[8];   let a = a + 32;
+        let mem[a] = spr[9];   let a = a + 32;
+        let mem[a] = spr[10];  let a = a + 32;
+        let mem[a] = spr[11];  let a = a + 32;
+        let mem[a] = spr[12];
+        return;
+    }
+
+    /**
+     * Dibuja solo la fila inferior (marca discontinua) de una celda de carretera.
+     * Se usa en el redibujado completo, cuando el resto de la celda ya esta en blanco.
+     * 480 = 15 filas * 32 palabras (constante, no se calcula en tiempo de ejecucion).
+     */
+    function void drawRoadMark(int col, int lane) {
+        var Array spr;
+        let spr = Sprites.get(7);
+        let mem[laneBase[lane] + 480 + col] = spr[15];
+        return;
+    }
+
+    /**
+     * Dibuja un sprite con XOR en la columna col y en cualquier y (pixel exacto).
+     * Dibujar dos veces en el mismo sitio lo borra, restaurando el fondo:
+     * asi el jugador se mueve sin tener que guardar ni redibujar el fondo.
+     */
+    function void xorSprite(int col, int y, Array spr) {
+        var int addr, i, v, p;
+        let addr = rowAddr[y] + col;
+        let i = 0;
+        while (i < 16) {
+            let v = mem[addr];
+            let p = spr[i];
+            let mem[addr] = (v | p) & (~(v & p));
+            let addr = addr + 32;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Borra el area de juego (carriles) sin tocar el marcador. */
+    function void clearPlayfield() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(0, 16, 511, 255);
+        return;
+    }
+
+    /** Linea separadora entre el marcador y el area de juego. */
+    function void drawHudFrame() {
+        do Screen.setColor(true);
+        do Screen.drawLine(0, 13, 511, 13);
+        return;
+    }
+}

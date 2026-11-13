@@ -1,0 +1,102 @@
+class Player {
+    field int col, lane;
+    field int gy;
+    field int z, vz;
+    field int dy;
+    field int frame;
+    field int targetLane;
+    field int drawnCol, drawnY;
+    field boolean hopping, visible;
+
+    constructor Player new(int c, int l) {
+        let col = c;
+        let lane = l;
+        let gy = Gfx.laneY(l);
+        let z = 0;
+        let vz = 0;
+        let dy = 0;
+        let frame = 0;
+        let targetLane = l;
+        let hopping = false;
+        let visible = false;
+        return this;
+    }
+
+    method int getCol() {
+        return col;
+    }
+
+    method int getLane() {
+        return lane;
+    }
+
+    method boolean isHopping() {
+        return hopping;
+    }
+
+    method void setLane(int l) {
+        let lane = l;
+        let gy = Gfx.laneY(l);
+        return;
+    }
+
+    method void startHop(int c, int l) {
+        let col = c;
+        let targetLane = l;
+        let dy = 0;
+        if (l < lane) {
+            let dy = -4;
+        }
+        if (l > lane) {
+            let dy = 4;
+        }
+        let z = 0;
+        let vz = 6;
+        let frame = 0;
+        let hopping = true;
+        return;
+    }
+
+    method boolean tick() {
+        var boolean landed;
+        let landed = false;
+        let gy = gy + dy;
+        let z = z + vz;
+        let vz = vz - 4;
+        let frame = frame + 1;
+        if (frame = 4) {
+            let hopping = false;
+            let z = 0;
+            let lane = targetLane;
+            let gy = Gfx.laneY(lane);
+            let landed = true;
+        }
+        return landed;
+    }
+
+    method void draw() {
+        let drawnCol = col;
+        let drawnY = gy - z;
+        do Gfx.xorSprite(drawnCol, drawnY, Sprites.player());
+        let visible = true;
+        return;
+    }
+
+    method void erase() {
+        if (visible) {
+            do Gfx.xorSprite(drawnCol, drawnY, Sprites.player());
+            let visible = false;
+        }
+        return;
+    }
+
+    method void forget() {
+        let visible = false;
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

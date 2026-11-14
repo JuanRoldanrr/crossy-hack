@@ -1,0 +1,28 @@
+function Main.main 1
+call Gfx.init 0
+pop temp 0
+call Sprites.init 0
+pop temp 0
+call Rng.init 0
+pop temp 0
+call Game.initStatics 0
+pop temp 0
+call Game.titleScreen 0
+pop temp 0
+label WTOP1
+push constant 1
+neg
+not
+if-goto WEND1
+call Game.new 0
+pop local 0
+push local 0
+call Game.run 1
+pop temp 0
+push local 0
+call Game.dispose 1
+pop temp 0
+goto WTOP1
+label WEND1
+push constant 0
+return

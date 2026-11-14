@@ -1,0 +1,67 @@
+function Rng.init 0
+push constant 1
+pop static 0
+push constant 0
+return
+function Rng.stir 0
+push static 0
+push constant 1
+add
+pop static 0
+push static 0
+push constant 0
+eq
+not
+if-goto ELSE1
+push constant 1
+pop static 0
+goto END1
+label ELSE1
+label END1
+push constant 0
+return
+function Rng.step 1
+push static 0
+push constant 0
+lt
+pop local 0
+push static 0
+push static 0
+add
+pop static 0
+push local 0
+not
+if-goto ELSE2
+push static 0
+push constant 26625
+call Gfx.xor 2
+pop static 0
+goto END2
+label ELSE2
+label END2
+push constant 0
+return
+function Rng.next 1
+push constant 0
+pop local 0
+label WTOP3
+push local 0
+push constant 7
+lt
+not
+if-goto WEND3
+call Rng.step 0
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WTOP3
+label WEND3
+push static 0
+return
+function Rng.bits 0
+call Rng.next 0
+push argument 0
+and
+return

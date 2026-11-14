@@ -1,0 +1,513 @@
+function Lane.new 2
+push constant 6
+call Memory.alloc 1
+pop pointer 0
+push constant 32
+call Array.new 1
+pop this 1
+push constant 0
+pop this 2
+push constant 0
+pop this 5
+push constant 0
+pop this 4
+push constant 1
+pop this 3
+push argument 0
+not
+if-goto ELSE1
+push constant 1
+pop this 0
+push constant 7
+pop local 1
+goto END1
+label ELSE1
+push constant 0
+pop this 0
+push constant 0
+pop local 1
+label END1
+push constant 0
+pop local 0
+label WTOP2
+push local 0
+push constant 32
+lt
+not
+if-goto WEND2
+push this 1
+push local 0
+add
+push local 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WTOP2
+label WEND2
+push argument 0
+not
+if-goto ELSE3
+push pointer 0
+push argument 1
+call Lane.genCars 2
+pop temp 0
+goto END3
+label ELSE3
+push pointer 0
+push argument 2
+call Lane.genGrass 2
+pop temp 0
+label END3
+push pointer 0
+return
+function Lane.genCars 4
+push argument 0
+pop pointer 0
+push constant 1
+push argument 1
+add
+push constant 3
+call Rng.bits 1
+add
+pop this 4
+push this 4
+push constant 13
+gt
+not
+if-goto ELSE4
+push constant 13
+pop this 4
+goto END4
+label ELSE4
+label END4
+push constant 1
+call Rng.bits 1
+push constant 0
+eq
+not
+if-goto ELSE5
+push constant 1
+pop this 3
+goto END5
+label ELSE5
+push constant 1
+neg
+pop this 3
+label END5
+push constant 7
+call Rng.bits 1
+pop local 0
+label WTOP6
+push local 0
+push constant 30
+lt
+not
+if-goto WEND6
+push constant 1
+push constant 1
+call Rng.bits 1
+add
+pop local 1
+push local 0
+push local 1
+add
+push constant 30
+gt
+not
+not
+if-goto ELSE7
+push local 1
+push constant 1
+eq
+not
+if-goto ELSE8
+push this 1
+push local 0
+add
+push constant 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto END8
+label ELSE8
+push this 1
+push local 0
+add
+push constant 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+pop local 3
+label WTOP9
+push local 3
+push local 1
+push constant 1
+sub
+lt
+not
+if-goto WEND9
+push this 1
+push local 0
+push local 3
+add
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 3
+push constant 1
+add
+pop local 3
+goto WTOP9
+label WEND9
+push this 1
+push local 0
+push local 1
+add
+push constant 1
+sub
+add
+push constant 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label END8
+goto END7
+label ELSE7
+label END7
+push constant 6
+push constant 7
+call Rng.bits 1
+add
+pop local 2
+push argument 1
+push constant 4
+gt
+not
+if-goto ELSE10
+push local 2
+push constant 2
+sub
+pop local 2
+goto END10
+label ELSE10
+label END10
+push local 0
+push local 1
+add
+push local 2
+add
+pop local 0
+goto WTOP6
+label WEND6
+push constant 0
+return
+function Lane.genGrass 0
+push argument 0
+pop pointer 0
+push argument 1
+not
+not
+if-goto ELSE11
+push constant 1
+call Rng.bits 1
+push constant 0
+eq
+not
+if-goto ELSE12
+push this 1
+push constant 31
+call Rng.bits 1
+add
+push constant 5
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto END12
+label ELSE12
+label END12
+goto END11
+label ELSE11
+label END11
+push constant 0
+return
+function Lane.cellAt 0
+push argument 0
+pop pointer 0
+push this 1
+push argument 1
+push this 2
+sub
+push constant 31
+and
+add
+pop pointer 1
+push that 0
+return
+function Lane.isRoad 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 1
+eq
+return
+function Lane.update 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 1
+eq
+not
+if-goto ELSE13
+push this 5
+push this 4
+add
+pop this 5
+label WTOP14
+push this 5
+push constant 16
+lt
+not
+not
+if-goto WEND14
+push this 5
+push constant 16
+sub
+pop this 5
+push pointer 0
+push argument 1
+call Lane.shift 2
+pop temp 0
+goto WTOP14
+label WEND14
+goto END13
+label ELSE13
+label END13
+push constant 0
+return
+function Lane.shift 4
+push argument 0
+pop pointer 0
+push this 3
+push constant 1
+eq
+not
+if-goto ELSE15
+push this 1
+push constant 31
+push this 2
+sub
+push constant 31
+and
+add
+pop pointer 1
+push that 0
+pop local 3
+push constant 0
+push this 2
+sub
+push constant 31
+and
+pop local 1
+push constant 0
+pop local 0
+label WTOP16
+push local 0
+push constant 32
+lt
+not
+if-goto WEND16
+push this 1
+push local 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+push local 3
+eq
+not
+not
+if-goto ELSE17
+push local 0
+push argument 1
+push local 3
+call Gfx.drawRoadCell 3
+pop temp 0
+goto END17
+label ELSE17
+label END17
+push local 2
+pop local 3
+push local 1
+push constant 1
+add
+push constant 31
+and
+pop local 1
+push local 0
+push constant 1
+add
+pop local 0
+goto WTOP16
+label WEND16
+goto END15
+label ELSE15
+push this 1
+push constant 0
+push this 2
+sub
+push constant 31
+and
+add
+pop pointer 1
+push that 0
+pop local 3
+push constant 31
+push this 2
+sub
+push constant 31
+and
+pop local 1
+push constant 31
+pop local 0
+label WTOP18
+push local 0
+push constant 1
+neg
+gt
+not
+if-goto WEND18
+push this 1
+push local 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+push local 3
+eq
+not
+not
+if-goto ELSE19
+push local 0
+push argument 1
+push local 3
+call Gfx.drawRoadCell 3
+pop temp 0
+goto END19
+label ELSE19
+label END19
+push local 2
+pop local 3
+push local 1
+push constant 1
+sub
+push constant 31
+and
+pop local 1
+push local 0
+push constant 1
+sub
+pop local 0
+goto WTOP18
+label WEND18
+label END15
+push this 2
+push this 3
+add
+push constant 31
+and
+pop this 2
+push constant 0
+return
+function Lane.drawAll 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WTOP20
+push local 0
+push constant 32
+lt
+not
+if-goto WEND20
+push this 1
+push local 0
+push this 2
+sub
+push constant 31
+and
+add
+pop pointer 1
+push that 0
+pop local 1
+push this 0
+push constant 1
+eq
+not
+if-goto ELSE21
+push local 0
+push argument 1
+call Gfx.drawRoadMark 2
+pop temp 0
+push local 1
+push constant 5
+lt
+not
+if-goto ELSE22
+push local 0
+push argument 1
+push local 1
+call Gfx.drawRoadCell 3
+pop temp 0
+goto END22
+label ELSE22
+label END22
+goto END21
+label ELSE21
+push local 1
+push constant 0
+gt
+not
+if-goto ELSE23
+push local 0
+push argument 1
+push local 1
+call Gfx.drawCell 3
+pop temp 0
+goto END23
+label ELSE23
+label END23
+label END21
+push local 0
+push constant 1
+add
+pop local 0
+goto WTOP20
+label WEND20
+push constant 0
+return
+function Lane.dispose 0
+push argument 0
+pop pointer 0
+push this 1
+call Array.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return

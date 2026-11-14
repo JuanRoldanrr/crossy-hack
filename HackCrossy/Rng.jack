@@ -1,0 +1,40 @@
+class Rng {
+    static int state;
+
+    function void init() {
+        let state = 1;
+        return;
+    }
+
+    function void stir() {
+        let state = state + 1;
+        if (state = 0) {
+            let state = 1;
+        }
+        return;
+    }
+
+    function void step() {
+        var boolean msb;
+        let msb = state < 0;
+        let state = state + state;
+        if (msb) {
+            let state = Gfx.xor(state, 26625);
+        }
+        return;
+    }
+
+    function int next() {
+        var int i;
+        let i = 0;
+        while (i < 7) {
+            do Rng.step();
+            let i = i + 1;
+        }
+        return state;
+    }
+
+    function int bits(int mask) {
+        return Rng.next() & mask;
+    }
+}

@@ -1,0 +1,16 @@
+class Main {
+    function void main() {
+        var Game game;
+        do Gfx.init();
+        do Sprites.init();
+        do Rng.init();
+        do Game.initStatics();
+        do Game.titleScreen();
+        while (true) {
+            let game = Game.new();
+            do game.run();
+            do game.dispose();
+        }
+        return;
+    }
+}

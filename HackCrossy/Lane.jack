@@ -1,0 +1,159 @@
+class Lane {
+    field int kind;
+    field Array cells;
+    field int offset;
+    field int dir;
+    field int speed;
+    field int acc;
+
+    constructor Lane new(boolean road, int level, boolean safe) {
+        var int i, fill;
+        let cells = Array.new(32);
+        let offset = 0;
+        let acc = 0;
+        let speed = 0;
+        let dir = 1;
+        if (road) {
+            let kind = 1;
+            let fill = 7;
+        } else {
+            let kind = 0;
+            let fill = 0;
+        }
+        let i = 0;
+        while (i < 32) {
+            let cells[i] = fill;
+            let i = i + 1;
+        }
+        if (road) {
+            do genCars(level);
+        } else {
+            do genGrass(safe);
+        }
+        return this;
+    }
+
+    method void genCars(int level) {
+        var int pos, len, gap, k;
+        let speed = 1 + level + Rng.bits(3);
+        if (speed > 13) {
+            let speed = 13;
+        }
+        if (Rng.bits(1) = 0) {
+            let dir = 1;
+        } else {
+            let dir = -1;
+        }
+        let pos = Rng.bits(7);
+        while (pos < 30) {
+            let len = 1 + Rng.bits(1);
+
+            if (~((pos + len) > 30)) {
+                if (len = 1) {
+                    let cells[pos] = 4;
+                } else {
+                    let cells[pos] = 1;
+                    let k = 1;
+                    while (k < (len - 1)) {
+                        let cells[pos + k] = 2;
+                        let k = k + 1;
+                    }
+                    let cells[(pos + len) - 1] = 3;
+                }
+            }
+            let gap = 6 + Rng.bits(7);
+            if (level > 4) {
+                let gap = gap - 2;
+            }
+            let pos = pos + len + gap;
+        }
+        return;
+    }
+
+    method void genGrass(boolean safe) {
+        if (~safe) {
+            if (Rng.bits(1) = 0) {
+                let cells[Rng.bits(31)] = 5;
+            }
+        }
+        return;
+    }
+
+    method int cellAt(int c) {
+        return cells[(c - offset) & 31];
+    }
+
+    method boolean isRoad() {
+        return kind = 1;
+    }
+
+    method void update(int idx) {
+        if (kind = 1) {
+            let acc = acc + speed;
+            while (~(acc < 16)) {
+                let acc = acc - 16;
+                do shift(idx);
+            }
+        }
+        return;
+    }
+
+    method void shift(int idx) {
+        var int c, i, cur, prev;
+        if (dir = 1) {
+            let prev = cells[(31 - offset) & 31];
+            let i = (0 - offset) & 31;
+            let c = 0;
+            while (c < 32) {
+                let cur = cells[i];
+                if (~(cur = prev)) {
+                    do Gfx.drawRoadCell(c, idx, prev);
+                }
+                let prev = cur;
+                let i = (i + 1) & 31;
+                let c = c + 1;
+            }
+        } else {
+            let prev = cells[(0 - offset) & 31];
+            let i = (31 - offset) & 31;
+            let c = 31;
+            while (c > -1) {
+                let cur = cells[i];
+                if (~(cur = prev)) {
+                    do Gfx.drawRoadCell(c, idx, prev);
+                }
+                let prev = cur;
+                let i = (i - 1) & 31;
+                let c = c - 1;
+            }
+        }
+        let offset = (offset + dir) & 31;
+        return;
+    }
+
+    method void drawAll(int idx) {
+        var int c, t;
+        let c = 0;
+        while (c < 32) {
+            let t = cells[(c - offset) & 31];
+            if (kind = 1) {
+                do Gfx.drawRoadMark(c, idx);
+                if (t < 5) {
+                    do Gfx.drawRoadCell(c, idx, t);
+                }
+            } else {
+                if (t > 0) {
+                    do Gfx.drawCell(c, idx, t);
+                }
+            }
+            let c = c + 1;
+        }
+        return;
+    }
+
+    method void dispose() {
+        do cells.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}

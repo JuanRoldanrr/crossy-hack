@@ -3,7 +3,7 @@ Hack-Crossy
 Juego tipo Crossy Road escrito en Jack para la plataforma Hack (Nand2Tetris). Organización de Computadores, Universidad EAFIT, 2026.
 
 Equipo: Jose David Acevedo, Juan José Roldán, Simon Arias
-Video de demostración: [PEGAR AQUÍ EL ENLACE]
+Video de demostración: https://youtu.be/JaFVAMyF9ro
 
 Concepto
 
